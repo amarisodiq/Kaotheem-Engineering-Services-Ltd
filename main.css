@@ -55,7 +55,8 @@ nav>ul {
 /* Hero section */
 .bg-hero {
     background-position: center;
-    background-size: contain;
+    background-size: cover;
+    background-repeat: no-repeat;
     height: 100vh;
     position: relative;
     display: flex;

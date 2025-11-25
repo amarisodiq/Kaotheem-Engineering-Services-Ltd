@@ -80,10 +80,10 @@ typeWriter();
 
 // hero animation
 const images = [
-  './image/kaotheem-1.jpg',
   './image/kaotheem-2.jpg',
+  './image/kaotheem-6.jpg',
   './image/kaotheem-3.jpg',
-  './image/kaotheem-4.jpg',
+  './image/kaotheem-5.jpg',
 ];
 
 // Preload all images
