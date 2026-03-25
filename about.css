@@ -349,7 +349,7 @@
 
 /* Call to Action */
 .about-cta {
-  background: linear-gradient(135deg, #0a2a44, #0a3d6d);
+  background: linear-gradient(135deg, #08143ed8, #0a2a44);
   position: relative;
   overflow: hidden;
 }
@@ -363,6 +363,15 @@
   height: 200%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
   animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
 }
 
 .about-cta h2 {
@@ -388,6 +397,8 @@
 .about-cta .btn-light:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  background: #0a3d6d;
+  color: white;
 }
 
 /* Responsive Styles */

@@ -19,9 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   galleryImages.forEach(img => {
       img.onerror = function() {
           console.log('Image not found, using placeholder:', this.src);
-          // Set a fallback image - using a colored placeholder
           this.src = 'https://via.placeholder.com/600x400/0a3d6d/white?text=Kaotheem+Image+Coming+Soon';
-          // Add a class to style the placeholder
           this.classList.add('placeholder-image');
       };
   });
@@ -45,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (navLinks.length > 0 && navbarCollapse) {
       navLinks.forEach(link => {
           link.addEventListener('click', () => {
-              // Check if on mobile (navbar toggler is visible)
               const navbarToggler = document.querySelector('.navbar-toggler');
               const isMobile = navbarToggler && window.getComputedStyle(navbarToggler).display !== 'none';
               
@@ -104,125 +101,224 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       });
   }
+  
+  // ========================================
+  // CONTACT FORM HANDLING (ENHANCED)
+  // ========================================
+  const contactForm = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  
+  if (contactForm) {
+      contactForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Get form elements
+          const name = document.getElementById('name');
+          const email = document.getElementById('email');
+          const message = document.getElementById('message');
+          const privacy = document.getElementById('privacyPolicy');
+          
+          // Validate form
+          let isValid = true;
+          
+          // Validate name
+          if (!name.value.trim()) {
+              name.classList.add('is-invalid');
+              isValid = false;
+          } else {
+              name.classList.remove('is-invalid');
+          }
+          
+          // Validate email
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!email.value.trim() || !emailRegex.test(email.value)) {
+              email.classList.add('is-invalid');
+              isValid = false;
+          } else {
+              email.classList.remove('is-invalid');
+          }
+          
+          // Validate message
+          if (!message.value.trim()) {
+              message.classList.add('is-invalid');
+              isValid = false;
+          } else {
+              message.classList.remove('is-invalid');
+          }
+          
+          // Validate privacy policy
+          if (privacy && !privacy.checked) {
+              privacy.classList.add('is-invalid');
+              isValid = false;
+          } else if (privacy) {
+              privacy.classList.remove('is-invalid');
+          }
+          
+          if (!isValid) return;
+          
+          // Show loading state
+          if (submitBtn) {
+              submitBtn.disabled = true;
+          }
+          if (loadingSpinner) {
+              loadingSpinner.classList.remove('d-none');
+          }
+          if (submitBtn && submitBtn.querySelector('i')) {
+              submitBtn.querySelector('i').classList.add('d-none');
+          }
+          
+          // Hide previous messages
+          if (successMessage) successMessage.classList.add('d-none');
+          if (errorMessage) errorMessage.classList.add('d-none');
+          
+          try {
+              const formData = new FormData(contactForm);
+              const response = await fetch('https://formsubmit.co/ajax/info@kaotheem.com', {
+                  method: 'POST',
+                  body: formData
+              });
+              
+              if (response.ok) {
+                  if (successMessage) successMessage.classList.remove('d-none');
+                  contactForm.reset();
+                  if (successMessage) {
+                      successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                  setTimeout(() => {
+                      if (successMessage) successMessage.classList.add('d-none');
+                  }, 5000);
+              } else {
+                  throw new Error('Submission failed');
+              }
+          } catch (error) {
+              console.error('Form submission error:', error);
+              if (errorMessage) errorMessage.classList.remove('d-none');
+              setTimeout(() => {
+                  if (errorMessage) errorMessage.classList.add('d-none');
+              }, 5000);
+          } finally {
+              // Reset button state
+              if (submitBtn) {
+                  submitBtn.disabled = false;
+              }
+              if (loadingSpinner) {
+                  loadingSpinner.classList.add('d-none');
+              }
+              if (submitBtn && submitBtn.querySelector('i')) {
+                  submitBtn.querySelector('i').classList.remove('d-none');
+              }
+          }
+      });
+  }
 });
 
 // ========================================
-// TYPEWRITER TEXT ANIMATION
+// HERO BACKGROUND SLIDESHOW - CONTINUOUS
 // ========================================
-// ========================================
-// HERO BACKGROUND SLIDESHOW - CONTINUOUS (No Pause on Hover)
-// ========================================
-
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Array of hero background images
-    const heroImages = [
+  
+  // Array of hero background images
+  const heroImages = [
       './image/gallery-6.png',
       './image/gallery-5.png',
       './image/gallery-7.png',
       './image/gallery-1.png',
       './image/kaotheem-2.jpg'
-    ];
-    
-    let currentImageIndex = 0;
-    let slideInterval;
-    const slideDuration = 5000; // 5 seconds per slide
-    const transitionSpeed = 1000; // 1 second transition
-    
-    const heroSection = document.querySelector('.hero-bg');
-    
-    // Only run if hero section exists
-    if (heroSection && heroImages.length > 0) {
-        
-        // Preload all images for smooth transitions
-        heroImages.forEach((src) => {
-            const img = new Image();
-            img.src = src;
-        });
-        
-        // Set initial background
-        heroSection.style.backgroundImage = `url('${heroImages[0]}')`;
-        heroSection.style.transition = `background-image ${transitionSpeed}ms ease-in-out`;
-        
-        // Create navigation dots (optional)
-        createNavigationDots();
-        
-        // Start slideshow (continuous - no pause on hover)
-        startSlideshow();
-        
-        // Function to change background image
-        function changeBackground() {
-            currentImageIndex = (currentImageIndex + 1) % heroImages.length;
-            heroSection.style.backgroundImage = `url('${heroImages[currentImageIndex]}')`;
-            updateActiveDot();
-        }
-        
-        // Function to change to specific image
-        function goToImage(index) {
-            if (index !== currentImageIndex) {
-                currentImageIndex = index;
-                heroSection.style.backgroundImage = `url('${heroImages[currentImageIndex]}')`;
-                updateActiveDot();
-                
-                // Reset timer when manually changing
-                resetSlideshow();
-            }
-        }
-        
-        // Function to start slideshow
-        function startSlideshow() {
-            if (slideInterval) clearInterval(slideInterval);
-            slideInterval = setInterval(changeBackground, slideDuration);
-        }
-        
-        // Function to reset slideshow timer
-        function resetSlideshow() {
-            clearInterval(slideInterval);
-            startSlideshow();
-        }
-        
-        // Function to create navigation dots
-        function createNavigationDots() {
-            // Remove existing dots if any
-            const existingDots = document.querySelector('.hero-slide-dots');
-            if (existingDots) existingDots.remove();
-            
-            const dotsContainer = document.createElement('div');
-            dotsContainer.className = 'hero-slide-dots';
-            
-            heroImages.forEach((image, index) => {
-                const dot = document.createElement('div');
-                dot.className = 'hero-dot';
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToImage(index));
-                dotsContainer.appendChild(dot);
-            });
-            
-            heroSection.appendChild(dotsContainer);
-        }
-        
-        // Function to update active dot
-        function updateActiveDot() {
-            const dots = document.querySelectorAll('.hero-dot');
-            dots.forEach((dot, index) => {
-                if (index === currentImageIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
-    }
+  ];
+  
+  let currentImageIndex = 0;
+  let slideInterval;
+  const slideDuration = 5000; // 5 seconds per slide
+  const transitionSpeed = 1000; // 1 second transition
+  
+  const heroSection = document.querySelector('.hero-bg');
+  
+  // Only run if hero section exists
+  if (heroSection && heroImages.length > 0) {
+      
+      // Preload all images for smooth transitions
+      heroImages.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+      });
+      
+      // Set initial background
+      heroSection.style.backgroundImage = `url('${heroImages[0]}')`;
+      heroSection.style.transition = `background-image ${transitionSpeed}ms ease-in-out`;
+      
+      // Create navigation dots
+      createNavigationDots();
+      
+      // Start slideshow
+      startSlideshow();
+      
+      function changeBackground() {
+          currentImageIndex = (currentImageIndex + 1) % heroImages.length;
+          heroSection.style.backgroundImage = `url('${heroImages[currentImageIndex]}')`;
+          updateActiveDot();
+      }
+      
+      function goToImage(index) {
+          if (index !== currentImageIndex) {
+              currentImageIndex = index;
+              heroSection.style.backgroundImage = `url('${heroImages[currentImageIndex]}')`;
+              updateActiveDot();
+              resetSlideshow();
+          }
+      }
+      
+      function startSlideshow() {
+          if (slideInterval) clearInterval(slideInterval);
+          slideInterval = setInterval(changeBackground, slideDuration);
+      }
+      
+      function resetSlideshow() {
+          clearInterval(slideInterval);
+          startSlideshow();
+      }
+      
+      function createNavigationDots() {
+          const existingDots = document.querySelector('.hero-slide-dots');
+          if (existingDots) existingDots.remove();
+          
+          const dotsContainer = document.createElement('div');
+          dotsContainer.className = 'hero-slide-dots';
+          
+          heroImages.forEach((image, index) => {
+              const dot = document.createElement('div');
+              dot.className = 'hero-dot';
+              if (index === 0) dot.classList.add('active');
+              dot.addEventListener('click', () => goToImage(index));
+              dotsContainer.appendChild(dot);
+          });
+          
+          heroSection.appendChild(dotsContainer);
+      }
+      
+      function updateActiveDot() {
+          const dots = document.querySelectorAll('.hero-dot');
+          dots.forEach((dot, index) => {
+              if (index === currentImageIndex) {
+                  dot.classList.add('active');
+              } else {
+                  dot.classList.remove('active');
+              }
+          });
+      }
+  }
 });
 
 // ========================================
 // TYPEWRITER TEXT ANIMATION
 // ========================================
 const texts = [
-    "Quality NDT Services You Can Trust",
-    "Safety | Precision | Reliability",
-    "9+ Years of Excellence",
-    "Authorized Distributor - SREM TECHNOLOGIES"
+  "Quality NDT Services You Can Trust",
+  "Safety | Precision | Reliability",
+  "9+ Years of Excellence",
+  "Authorized Distributor - SREM TECHNOLOGIES"
 ];
 
 let currentText = 0;
@@ -232,44 +328,42 @@ const speed = 100;
 const pause = 2000;
 
 function typeWriter() {
-    const element = document.getElementById("typewriter");
-    if (!element) return;
-    
-    const fullText = texts[currentText];
-    
-    if (isDeleting) {
-        charIndex--;
-        element.textContent = fullText.substring(0, charIndex);
-    } else {
-        charIndex++;
-        element.textContent = fullText.substring(0, charIndex);
-    }
-    
-    if (!isDeleting && charIndex === fullText.length) {
-        isDeleting = true;
-        setTimeout(typeWriter, pause);
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        currentText = (currentText + 1) % texts.length;
-        setTimeout(typeWriter, 500);
-    } else {
-        setTimeout(typeWriter, isDeleting ? 50 : speed);
-    }
+  const element = document.getElementById("typewriter");
+  if (!element) return;
+  
+  const fullText = texts[currentText];
+  
+  if (isDeleting) {
+      charIndex--;
+      element.textContent = fullText.substring(0, charIndex);
+  } else {
+      charIndex++;
+      element.textContent = fullText.substring(0, charIndex);
+  }
+  
+  if (!isDeleting && charIndex === fullText.length) {
+      isDeleting = true;
+      setTimeout(typeWriter, pause);
+  } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      currentText = (currentText + 1) % texts.length;
+      setTimeout(typeWriter, 500);
+  } else {
+      setTimeout(typeWriter, isDeleting ? 50 : speed);
+  }
 }
 
 // Start typewriter if element exists
 if (document.getElementById("typewriter")) {
-    typeWriter();
+  typeWriter();
 }
 
 // ========================================
-// GALLERY MODAL - FIX IMAGE SIZE ON BIG SCREENS
+// GALLERY MODAL STYLES
 // ========================================
-// Add custom style to control modal image size dynamically
 const addModalStyles = () => {
   const style = document.createElement('style');
   style.textContent = `
-      /* Control modal image size based on screen width */
       .custom-modal-image,
       .modal-body img {
           max-width: 85%;
@@ -314,7 +408,6 @@ const addModalStyles = () => {
           }
       }
       
-      /* Modal background styling */
       .modal-content.bg-dark {
           background-color: rgba(0, 0, 0, 0.95) !important;
           border: none;
@@ -336,12 +429,6 @@ const addModalStyles = () => {
           opacity: 1;
       }
       
-      /* Placeholder image styling */
-      .placeholder-image {
-          object-fit: cover;
-      }
-      
-      /* Gallery hover effect fix */
       .gallery-item {
           cursor: pointer;
           overflow: hidden;
@@ -390,7 +477,6 @@ const addModalStyles = () => {
           font-weight: 500;
       }
       
-      /* Responsive gallery images */
       @media (max-width: 768px) {
           .gallery-item img {
               height: 220px;
@@ -406,63 +492,21 @@ if (document.querySelector('.gallery-section')) {
 }
 
 // ========================================
-// FORM VALIDATION (If contact form exists)
+// EMAIL VALIDATION HELPER
 // ========================================
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-  contactForm.addEventListener('submit', function(e) {
-      const name = document.getElementById('name');
-      const email = document.getElementById('email');
-      const message = document.getElementById('message');
-      let isValid = true;
-      
-      // Simple validation
-      if (name && name.value.trim() === '') {
-          name.classList.add('is-invalid');
-          isValid = false;
-      } else if (name) {
-          name.classList.remove('is-invalid');
-      }
-      
-      if (email && email.value.trim() === '') {
-          email.classList.add('is-invalid');
-          isValid = false;
-      } else if (email && !isValidEmail(email.value)) {
-          email.classList.add('is-invalid');
-          isValid = false;
-      } else if (email) {
-          email.classList.remove('is-invalid');
-      }
-      
-      if (message && message.value.trim() === '') {
-          message.classList.add('is-invalid');
-          isValid = false;
-      } else if (message) {
-          message.classList.remove('is-invalid');
-      }
-      
-      if (!isValid) {
-          e.preventDefault();
-          alert('Please fill in all required fields correctly.');
-      }
-  });
-}
-
-// Email validation helper
 function isValidEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
 
 // ========================================
-// ADD DATA-AOS ATTRIBUTES DYNAMICALLY IF NEEDED
+// AOS REFRESH
 // ========================================
-// This ensures AOS animations work on dynamically added content
 if (typeof AOS !== 'undefined') {
   AOS.refresh();
 }
 
 // ========================================
-// CONSOLE LOG FOR DEVELOPMENT (Remove in production)
+// CONSOLE LOG
 // ========================================
 console.log('Kaotheem Energy Services - Website Loaded Successfully');

@@ -165,7 +165,7 @@
 
 /* Call to Action Section */
 .services-cta {
-  background: linear-gradient(135deg, #0a2a44, #0a3d6d);
+  background: linear-gradient(135deg, #08143ed8, #0a2a44);
   position: relative;
   overflow: hidden;
 }

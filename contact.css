@@ -4,7 +4,7 @@
 
 /* Contact Hero Section */
 .contact-hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('./image/kaotheem-1.jpg');
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('./image/gallery-1.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -121,7 +121,7 @@
 
 .form-label i {
   margin-right: 5px;
-  color: #ffb347;
+  color: #0a3d6d;
 }
 
 .form-control,
@@ -134,13 +134,13 @@
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #ffb347;
-  box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.2);
+  border-color: #0a3d6d;
+  box-shadow: 0 0 0 3px #0a3d6d6c;
 }
 
 .form-check-input:checked {
-  background-color: #ffb347;
-  border-color: #ffb347;
+  background-color: #0a3d6d;
+  border-color: #0a3d6d;
 }
 
 .btn-submit {
@@ -155,7 +155,7 @@
 
 .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(10, 61, 109, 0.3);
+  box-shadow: 0 5px 20px #0a3d6d6c;
   background: linear-gradient(135deg, #0a2a44, #0a3d6d);
 }
 
@@ -198,14 +198,14 @@
 }
 
 .hour-item.emergency {
-  background: rgba(255, 179, 71, 0.1);
+  background: #0a3d6d6c;
   padding: 1rem;
   border-radius: 12px;
   margin-top: 0.5rem;
 }
 
 .hour-item.emergency span {
-  color: #ffb347;
+  color: #0a3d6d;
   font-weight: 600;
 }
 
@@ -269,7 +269,7 @@
 }
 
 .faq-item h4 i {
-  color: #ffb347;
+  color: #0a3d6d;
   font-size: 1.2rem;
 }
 
@@ -281,7 +281,7 @@
 
 /* Call to Action */
 .contact-cta {
-  background: linear-gradient(135deg, #0a2a44, #0a3d6d);
+  background: linear-gradient(135deg, #08143ed8, #0a2a44);
   position: relative;
   overflow: hidden;
 }
@@ -293,7 +293,7 @@
   right: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255, 179, 71, 0.1), transparent);
+  background: radial-gradient(circle, #0a3d6d6c, transparent);
   animation: rotate 20s linear infinite;
 }
 
